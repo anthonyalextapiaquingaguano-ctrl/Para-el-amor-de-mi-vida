@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños, Mi Amor!</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for romantic typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffd1dc 0%, #ff9ebb 100%);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .font-script {
+            font-family: 'Sacramento', cursive;
+        }
+        /* Floating hearts background animation */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .heart-particle {
+            position: absolute;
+            bottom: -50px;
+            color: rgba(255, 255, 255, 0.7);
+            animation: float 6s linear infinite;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 relative">
+
+    <div id="hearts-container" class="absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <main class="relative z-10 bg-white/90 backdrop-blur-md border border-white/50 shadow-2xl rounded-3xl p-5 sm:p-8 md:p-10 max-w-lg w-full text-center transform transition-all duration-500">
+        
+        <!-- Contenedor del Reproductor de Audio MP3 Local -->
+        <div class="mb-5 flex items-center justify-between bg-pink-100/90 border border-pink-200 rounded-2xl px-4 py-2.5 shadow-sm">
+            <div class="flex items-center space-x-2 text-pink-700 font-semibold text-xs sm:text-sm truncate">
+                <span class="animate-pulse">🎵</span>
+                <span class="truncate" id="music-text">Nuestra Canción</span>
+            </div>
+            
+            <button onclick="toggleMusic()" id="music-btn" class="bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition shadow flex items-center gap-1 flex-shrink-0">
+                ▶ Reproducir
+            </button>
+
+            <!-- Elemento de Audio Oculto -->
+            <audio id="local-audio" loop>
+                <source src="musica_romantica.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+        </div>
+
+        <div class="mb-3">
+            <span class="text-pink-500 text-3xl animate-pulse">💖</span>
+            <h1 class="font-script text-5xl sm:text-6xl text-pink-600 font-bold mt-1 leading-tight">¡Feliz Cumpleaños, Mi Amor!</h1>
+        </div>
+
+        <!-- Contenedor de la Imagen Local -->
+        <div class="my-5 relative group overflow-hidden rounded-2xl shadow-lg border-4 border-pink-200 bg-pink-50">
+            <img src="foto_pareja.jpeg" 
+                 alt="Nuestra Foto Romántica" 
+                 class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-pink-500/10 pointer-events-none"></div>
+        </div>
+
+        <div class="space-y-3 text-gray-700 text-sm sm:text-base mb-6 text-left sm:text-center">
+            <p class="font-bold text-pink-700 text-center text-base sm:text-lg">Para la dueña de mi corazón en su día especial:</p>
+            <p class="leading-relaxed bg-pink-50/60 p-3.5 rounded-2xl border border-pink-100">
+                Mi amor, hoy el mundo celebra la llegada de la persona más hermosa, dulce y maravillosa que la vida me ha regalado. Tu sonrisa ilumina cada uno de mis días y tu amor es el mejor refugio. Deseo que este nuevo año de vida te traiga muchísima felicidad, salud y todos los sueños cumplidos. ¡Te amo con toda el alma! 🎉🎂❤️
+            </p>
+        </div>
+
+        <div class="bg-pink-50 rounded-2xl p-4 sm:p-5 border border-pink-200 shadow-inner">
+            <h3 class="text-pink-700 font-bold text-base sm:text-lg mb-3">¿Sabías cuánto te amo? 🥰</h3>
+            <div id="interactive-area" class="flex justify-center gap-4 items-center relative h-14">
+                <button id="btn-yes" onclick="celebrateLove()" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-2.5 px-6 sm:px-8 rounded-full shadow-lg transform transition active:scale-95 text-sm sm:text-base">
+                    ¡Sí, muchísimo! 💖
+                </button>
+                <button id="btn-no" onmouseover="moveNoButton()" ontouchstart="moveNoButton()" class="bg-gray-200 text-gray-700 font-bold py-2.5 px-5 rounded-full shadow transition-all absolute right-0 sm:right-4 text-sm sm:text-base">
+                    No 🙈
+                </button>
+            </div>
+            <p id="love-response" class="hidden text-pink-600 font-bold text-sm sm:text-base mt-3 animate-bounce">
+                ¡Exacto! Y te amo aún más de lo que imaginas. ¡Feliz cumpleaños, mi vida! ✨🥰
+            </p>
+        </div>
+
+        <div class="mt-5 text-xs text-gray-400 font-semibold tracking-wider uppercase">
+            Hecho con todo mi amor para ti 💌
+        </div>
+    </main>
+
+    <script>
+        // Generate floating hearts background effect continuously
+        function createHeart() {
+            const container = document.getElementById('hearts-container');
+            if (!container) return;
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 18 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+
+        setInterval(createHeart, 450);
+
+        // Reproductor de Audio MP3 Local
+        function toggleMusic() {
+            const audio = document.getElementById('local-audio');
+            const btn = document.getElementById('music-btn');
+            const musicText = document.getElementById('music-text');
+
+            if (audio.paused) {
+                audio.play();
+                btn.innerHTML = '⏸ Pausar';
+                btn.classList.remove('bg-pink-500', 'hover:bg-pink-600');
+                btn.classList.add('bg-rose-600', 'hover:bg-rose-700');
+                musicText.classList.add('animate-pulse');
+            } else {
+                audio.pause();
+                btn.innerHTML = '▶ Reproducir';
+                btn.classList.remove('bg-rose-600', 'hover:bg-rose-700');
+                btn.classList.add('bg-pink-500', 'hover:bg-pink-600');
+                musicText.classList.remove('animate-pulse');
+            }
+        }
+
+        // Interactive playful dodge effect for the "No" button
+        function moveNoButton() {
+            const btnNo = document.getElementById('btn-no');
+            const randomX = (Math.random() - 0.5) * 120;
+            const randomY = (Math.random() - 0.5) * 50;
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Celebrate Love button click action
+        function celebrateLove() {
+            const response = document.getElementById('love-response');
+            const btnYes = document.getElementById('btn-yes');
+            const btnNo = document.getElementById('btn-no');
+            
+            response.classList.remove('hidden');
+            btnYes.classList.add('scale-105', 'bg-rose-600');
+            btnNo.style.display = 'none';
+
+            // Trigger a burst of floating hearts celebration
+            for (let i = 0; i < 25; i++) {
+                setTimeout(createHeart, i * 80);
+            }
+        }
+    </script>
+</body>
+</html>
